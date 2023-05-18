@@ -1,6 +1,7 @@
 import json
 import os
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Any
+from definitions import PageAnnotationsList
 
 
 class ResultParser:
@@ -37,10 +38,6 @@ class ResultParser:
                 word_annotation["WordText"] = self.word_id_to_text[word_id]
                 result.append(word_annotation)
         return result
-
-    AnnotationItem = Dict[str, str]
-    PageAnnotationData = Dict[str, Union[str, List[AnnotationItem]]]
-    PageAnnotationsList = List[PageAnnotationData]
 
     def page_annotations_mapping(self) -> PageAnnotationsList:
         result = []
