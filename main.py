@@ -1,4 +1,4 @@
-from influence import Influence
+from inference import Inference
 from result_parser import ResultParser
 import os
 import argparse
@@ -14,7 +14,7 @@ def main(file_path: str) -> None:
     # you can also read api_key from environment variable
     # api_key = os.getenv('API_KEY')
 
-    client = Influence(project_id=project_id, api_key=api_key)
+    client = Inference(project_id=project_id, api_key=api_key)
 
     file_id = client.upload_single_file(file_path,
                                         is_async="true",
@@ -30,7 +30,7 @@ def main(file_path: str) -> None:
     if file_id:
         if client.inference_readiness_status_polling(file_id):
             output_file_path = client.download_result(file_id, output_folder="results")
-            print("Result downloaded")
+            print(f"Result downloaded: {output_file_path}")
             # result parsing
             result_parser = ResultParser(output_file_path)
             business_models = result_parser.business_models_mapping()
@@ -49,8 +49,9 @@ def main(file_path: str) -> None:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', dest='file_path',
-                        default=os.path.abspath("resources/samples/extraction/insurance-receipt-sample.pdf"),
-                        help='path to the input file (default: %(default)s)')
+    parser.add_argument(
+        '--file',
+        default=os.path.abspath("resources/samples/extraction/insurance-receipt-sample.pdf"),
+        help='path to the input file (default: %(default)s)')
     args = parser.parse_args()
-    main(args.file_path)
+    main(args.file)

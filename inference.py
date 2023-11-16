@@ -1,12 +1,14 @@
+import traceback
+
 import requests
 import time
 import os
 import json
 
 
-class Influence:
+class Inference:
     # Define class attributes
-    BASE_URL_CONSTANT = "https://smartdocs-web.production.bglsmartdocs.com/api/v1"
+    BASE_URL_CONSTANT = "https://smartdocs-web.doc.com.ai/api/v1"
 
     def __init__(self, project_id: str, api_key: str, base_url: str = BASE_URL_CONSTANT):
         self.base_url = base_url
@@ -67,6 +69,7 @@ class Influence:
                     except requests.exceptions.HTTPError as e:
                         print(f"An error occurred while making the request: {e}")
                         print(f"Detailed error message: {response.text}")
+                        traceback.print_exc()
             else:
                 raise ValueError(f"File {file_name} is not a PDF file")
 
@@ -82,6 +85,7 @@ class Influence:
             except requests.exceptions.HTTPError as e:
                 print(f"An error occurred while making the request: {e}")
                 print(f"Detailed error message: {response.text}")
+                traceback.print_exc()
 
     # 5 * 60 = 300 seconds = 5 minutes
     def inference_readiness_status_polling(self, file_id: str, poll_interval: int = 5, max_attempts: int = 60) -> bool:
@@ -119,9 +123,11 @@ class Influence:
                 except requests.exceptions.HTTPError as e:
                     print(f"An error occurred while making the request: {e}")
                     print(f"Detailed error message: {result_response.text}")
+                    traceback.print_exc()
         else:
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 print(f"An error occurred while making the request: {e}")
                 print(f"Detailed error message: {response.text}")
+                traceback.print_exc()
