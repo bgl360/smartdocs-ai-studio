@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ai-assistant-demo</title>
+    <style>
+        html {
+            font-size: 16px;
+        }
+  
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+  
+        .debug-container {
+            display: flex;
+            max-width: 1200px;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+  
+        .top-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+  
+        .mode-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+  
+        .mode-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            min-width: 150px;
+            cursor: pointer;
+            background-color: #f8f8f8;
+        }
+  
+        .mode-select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+  
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            margin-right: 15px;
+        }
+  
+        #iframe-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+  
+        iframe {
+            width: 100%;
+            height: 90vh;
+            border: none;
+            display: block;
+        }
+
+        iframe body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+        <div class="debug-container"></div>
+            <div class="top-section">
+              <h1>AI Assistant Debug:</h1>
+              <div class="mode-selector">
+                <select id="mode-select" class="mode-select">
+                  <option value="page-mode.html">Page Mode</option>
+                  <option value="launch-button-mode.html">Launch Button</option>
+                  <option value="floating-button-mode.html">Floating Button</option>
+                  <option value="global-instance-mode.html">Global Instance</option>
+                </select>
+              </div>
+            </div>
+            <div id="iframe-container">
+              <iframe id="debug-frame" src="debug-modes/page-mode.html"></iframe>
+            </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const select = document.getElementById('mode-select')
+          const iframe = document.getElementById('debug-frame')
+      
+          const lastUsedMode = localStorage.getItem('aiAssistantDebugMode') || 'page-mode.html'
+          iframe.src = `debug-modes/${lastUsedMode}`
+          select.value = lastUsedMode
+          select.addEventListener('change', function() {
+            const mode = this.value
+            localStorage.setItem('aiAssistantDebugMode', mode)
+            iframe.src = `debug-modes/${mode}`
+          })
+        })
+      </script>
+</body>
+</html> 
