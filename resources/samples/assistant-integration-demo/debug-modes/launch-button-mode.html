@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>AI Assistant - Launch Button Mode</title>
+    <style>
+        body {
+            background: #c2c2c2;
+            margin: 0;
+        }
+    </style>
+    <!--  ADD ASSISTANT JS FILE HERE  -->
+</head>
+
+<body>
+<div id="wrapper" style="position: relative;">
+    <div id="demotoolbar"
+         style="display: flex; align-items: center; justify-content: center; height: 50px; padding-right: 10px; background: #59cdd1">
+        <ai-studio-chat-bot
+                style="--content-panel-zindex: 100; --content-panel-height: calc(100vh - 100px); --content-panel-top: 50px;"
+                show_assistants_list="yes"
+                ai_studio_business_id="XXXXX"
+                default_assistant_id="XXXXX"
+                web_base_url="https://XXXXX"
+                api_key="XXXXX"
+        >
+        </ai-studio-chat-bot>
+    </div>
+</div>
+<script>
+    function calcContentPanelZIndex() {
+        const chatBotComponent = document.querySelector('ai-studio-chat-bot');
+        if (chatBotComponent && chatBotComponent.shadowRoot) {
+            const contentPanel = chatBotComponent.shadowRoot.querySelector('.content-panel');
+            if (contentPanel) {
+                const zIndex = window.getComputedStyle(contentPanel).zIndex;
+                const height = window.getComputedStyle(contentPanel).height;
+                const top = window.getComputedStyle(contentPanel).top;
+                console.log('z-index of content-panel:', zIndex);
+                console.log('height of content-panel:', height);
+                console.log('top of content-panel:', top);
+            } else {
+                console.error('Element with class "content-panel" not found.');
+            }
+        } else {
+            console.error('ai-studio-chat-bot component or its shadow root not found.');
+        }
+    }
+
+    // Wait for DOM and component to be ready
+    document.addEventListener('DOMContentLoaded', () => {
+        const interval = setInterval(() => {
+            const chatBotComponent = document.querySelector('ai-studio-chat-bot');
+            if (chatBotComponent && chatBotComponent.shadowRoot) {
+                clearInterval(interval);
+                calcContentPanelZIndex()
+            }
+        }, 100);
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>AI Assistant - Global Instance Mode</title>
+    <style>
+        body {
+            background: #c2c2c2;
+            margin: 0;
+        }
+    </style>
+<!--  ADD ASSISTANT JS FILE HERE  -->
+</head>
+
+<body>
+<h2>Global instance mode example</h2>
+<p><strong>Note:</strong> Currently, only <code>start_user_message</code> is supported as a valid prop for the
+    <code>open()</code> method.
+</p>
+<div style="display: flex; flex-direction: column; flex-wrap: wrap; justify-content: space-around; gap: 1rem;">
+    <div class="item">
+        <button
+                style="background-color: #D53D9C; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;"
+                onclick="openChat()"
+        >Open ChatBot
+        </button>
+    </div>
+
+    <div class="item">
+        <button
+                style="background-color: #D53D9C; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;"
+                onclick="openChatWithContext({start_user_message: 'Hello'})"
+        >Open with start message
+        </button>
+    </div>
+</div>
+
+<div style="margin-top: 20px; margin-bottom: 20px;">
+    <button
+            id="closeButton"
+            onclick="closeChatbot()"
+            style="background-color: #797272; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+        Close ChatBot
+    </button>
+    <button id="toggleButton"
+            onclick="toggleChatbot()"
+            style="background-color: #008ccc; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
+        Toggle ChatBot
+    </button>
+</div>
+
+<div style="margin-top: 20px; margin-bottom: 20px;">
+    <ul>
+        <li>
+            <p>
+                <strong>Open ChatBot</strong> - This will open the chatbot without reinitializing it.
+                If the chatbot is already open, it will simply display the existing instance.
+            </p>
+        </li>
+        <li>
+            <p>
+                <strong>Open with start message</strong> - This will open the chatbot with the start message "Hello".
+                Because parameters are provided, this will reinitialize the chatbot instance.
+            </p>
+        </li>
+    </ul>
+</div>
+
+<ai-studio-chat-bot-global
+        show_assistants_list="yes"
+        ai_studio_business_id="XXXXX"
+        default_assistant_id="XXXXX"
+        web_base_url="https://XXXXX"
+        api_key="XXXXX"
+>
+</ai-studio-chat-bot-global>
+
+<script>
+    function openChat() {
+        if (window.sd_assistant) {
+            window.sd_assistant.open()
+        } else {
+            console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+        }
+    }
+
+    function openChatWithContext(config) {
+        if (window.sd_assistant) {
+            window.sd_assistant.open(config)
+        } else {
+            console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+        }
+    }
+
+    function toggleChatbot() {
+        if (window.sd_assistant) {
+            window.sd_assistant.toggle()
+        }
+    }
+
+    function closeChatbot() {
+        if (window.sd_assistant) {
+            window.sd_assistant.close()
+        }
+    }
+</script>
+</body>
+
+</html>

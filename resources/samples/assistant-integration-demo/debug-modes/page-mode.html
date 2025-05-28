@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>AI Assistant - Page Mode</title>
+    <style>
+        body {
+            background: #c2c2c2;
+            margin: 0;
+        }
+    </style>
+    <!--  ADD ASSISTANT JS FILE HERE  -->
+</head>
+
+<body>
+<div style="overflow-y: hidden; overflow-x: hidden;">
+    <ai-studio-chat-bot-page-mode
+            show_assistants_list="yes"
+            ai_studio_business_id="XXXXX"
+            default_assistant_id="XXXXX"
+            web_base_url="https://XXXXX"
+            api_key="XXXXX"
+            on_ui_action="onUiActionCallback"
+            feedback_callback="onAssistantFeedback"
+    >
+    </ai-studio-chat-bot-page-mode>
+</div>
+
+<script>
+    // Debug onUiActionCallback
+    window.onUiActionCallback = function (param) {
+        console.log('Received callback from Assistant with the param:', param)
+        // ... rest of the callback handler
+    }
+
+    // Debug onAssistantFeedback
+    window.onAssistantFeedback = function (param) {
+        console.log('Received message feedback:', param)
+        // ... rest of the feedback handler
+    }
+</script>
+</body>
+
+</html>
