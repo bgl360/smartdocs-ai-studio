@@ -4,7 +4,7 @@
   "description": "A simple HTML project demonstrating Hello World",
   "main": "index.html",
   "scripts": {
-    "start": "live-server . --port=3000 --open"
+    "start": "node_modules/.bin/live-server . --port=3000 --open"
   },
   "keywords": ["html", "demo"],
   "author": "",
