@@ -1,6 +1,9 @@
 # ai-assistant-demo
 
 A simple HTML project that work through how to integrate BGL AI Assistant into a web page.
+> Visit below link for more details on how to integrate AI Assistant into your web application.
+
+https://smartdocs-ai-studio.readme.io/docs/chat-bot-integration#/
 
 ## Getting Started
 
