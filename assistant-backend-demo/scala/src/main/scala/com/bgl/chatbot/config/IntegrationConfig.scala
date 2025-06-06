@@ -1,4 +1,4 @@
-package config
+package com.bgl.chatbot.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
