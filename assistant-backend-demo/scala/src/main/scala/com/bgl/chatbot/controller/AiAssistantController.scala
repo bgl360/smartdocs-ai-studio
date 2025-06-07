@@ -1,27 +1,26 @@
-package controller
+package com.bgl.chatbot.controller
 
-import com.typesafe.scalalogging.LazyLogging
-import config.IntegrationConfig
+
+import com.bgl.chatbot.config.IntegrationConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.gateway.webflux.ProxyExchange
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.ServerSentEvent
-import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation._
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.{Flux, Mono}
 
 import java.net.URLEncoder
-import scala.jdk.CollectionConverters.{CollectionHasAsScala, MapHasAsScala}
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 @RestController
 @RequestMapping(value = Array("/entities/{entityId}/ai-assistant"))
 class AiAssistantController(
   @Autowired integrationConfig: IntegrationConfig,
   @Autowired aiAssistantWebClient: WebClient,
-) extends AiAssistantHeaderHelper with LazyLogging {
+) extends AiAssistantHeaderHelper {
 
   //proxy to ai-assistant service
   // web_base_url: integrationConfig.smartdocsAiAssistantUrl
@@ -33,13 +32,11 @@ class AiAssistantController(
     @PathVariable segment: String,
     @RequestParam params: java.util.Map[String, String],
     proxy: ProxyExchange[Array[Byte]],
-    auth: Authentication
   ): Mono[ResponseEntity[Array[Byte]]] = {
     // Implement the logic to proxy AI assistant request
     proxyRequest(
       path = s"${integrationConfig.smartdocsAiAssistantUrl}$segment",
       params = params,
-      auth = auth,
       proxy = proxy,
       entityId = entityId
     )
@@ -51,14 +48,12 @@ class AiAssistantController(
     @PathVariable context: String,
     @PathVariable threadId: String,
     @RequestParam params: java.util.Map[String, String],
-    auth: Authentication
   ): Flux[ServerSentEvent[String]] = {
     // Implement the logic to proxy streaming events request
     proxyStreamingRequest(
       path = s"/$context/threads/$threadId/events",
       params = params,
       entityId = entityId,
-      auth = auth
     )
   }
 
@@ -68,14 +63,12 @@ class AiAssistantController(
     @PathVariable context: String,
     @PathVariable threadId: String,
     @RequestParam params: java.util.Map[String, String],
-    auth: Authentication
   ): Flux[ServerSentEvent[String]] = {
     // Implement the logic to proxy streaming run request
     proxyStreamingRequest(
       s"/$context/threads/stream/$threadId/runs",
       params,
       entityId,
-      auth
     )
   }
 
@@ -83,7 +76,6 @@ class AiAssistantController(
   private def proxyRequest(
     path: String,
     params: java.util.Map[String, String],
-    auth: Authentication,
     proxy: ProxyExchange[Array[Byte]],
     entityId: String
   ): Mono[ResponseEntity[Array[Byte]]] = {
@@ -94,7 +86,6 @@ class AiAssistantController(
       proxy.uri(uri)
         .header(API_KEY, integrationConfig.smartdocsAiAssistantApiKey)
         .header(USERNAME, userName)
-        .header(USER_AUTHORITIES, auth.getAuthorities.toArray.mkString(","))
         .header(FIRM_ID, s"$firmId")
         .header(SOURCE, SOURCE_NAME)
         .header(ENTITY_ID, entityId)
@@ -105,7 +96,6 @@ class AiAssistantController(
     path: String,
     params: java.util.Map[String, String],
     entityId: String,
-    auth: Authentication,
   ): Flux[ServerSentEvent[String]] = {
     val url: String = queryParamsURI(entityId, path, params)
     val firmId = "demo-firm-id" // Replace with actual firm ID retrieval logic
@@ -115,14 +105,12 @@ class AiAssistantController(
       .uri(url)
       .header(API_KEY, integrationConfig.smartdocsAiAssistantApiKey)
       .header(USERNAME, userName)
-      .header(USER_AUTHORITIES, auth.getAuthorities.asScala.map(_.getAuthority).mkString(","))
       .header(FIRM_ID, firmId)
       .header(SOURCE, SOURCE_NAME)
       .header(ENTITY_ID, entityId)
       .retrieve()
       .bodyToFlux(new ParameterizedTypeReference[ServerSentEvent[String]]() {})
       .onErrorResume { ex: Throwable =>
-        logger.error("ProxyStreamingRequestError", ex)
         Flux.empty[ServerSentEvent[String]]
       }
   }
@@ -134,7 +122,6 @@ class AiAssistantController(
   }
 
 }
-
 
 trait AiAssistantHeaderHelper {
   // for all the headers, start with "app-ai-assistant-function-call-"
