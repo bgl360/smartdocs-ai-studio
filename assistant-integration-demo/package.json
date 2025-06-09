@@ -4,12 +4,12 @@
   "description": "A simple HTML project demonstrating Hello World",
   "main": "index.html",
   "scripts": {
-    "start": "node_modules/.bin/live-server . --port=3000 --open"
+    "start": "http-server . -p 3000 -o"
   },
   "keywords": ["html", "demo"],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "http-server": "^14.1.1"
   }
 } 
