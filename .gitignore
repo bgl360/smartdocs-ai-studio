@@ -159,3 +159,6 @@ results/
 tests/
 .idea/
 *.iml
+
+# Demo.md in assistant-integration-demo
+assistant-integration-demo/Demo.md

@@ -4,107 +4,132 @@
 <head>
     <meta charset="utf-8"/>
     <title>AI Assistant - Global Instance Mode</title>
-    <style>
-        body {
-            background: #c2c2c2;
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    
 <!--  ADD ASSISTANT JS FILE HERE  -->
 </head>
 
 <body>
-<h2>Global instance mode example</h2>
-<p><strong>Note:</strong> Currently, only <code>start_user_message</code> is supported as a valid prop for the
-    <code>open()</code> method.
-</p>
-<div style="display: flex; flex-direction: column; flex-wrap: wrap; justify-content: space-around; gap: 1rem;">
-    <div class="item">
-        <button
-                style="background-color: #D53D9C; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;"
-                onclick="openChat()"
-        >Open ChatBot
-        </button>
+    <div class="container">
+        <!-- Left Panel - Form -->
+        <div class="left-panel">
+            <h2>User Information Form</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required placeholder="Enter your age" min="1" max="120">
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+        
+        <!-- Right Panel - AI Assistant -->
+        <div class="right-panel">
+            <h2>AI Assistant</h2>
+            <p><strong>Note:</strong> Currently, only <strong>start_user_message</strong> is supported as a valid prop for the
+                <strong>open()</strong> method.
+            </p>
+            
+            <div class="button-group">
+                <button class="control-btn" onclick="openChat()">
+                    Open ChatBot
+                </button>
+                
+                <button class="control-btn" onclick="openChatWithContext()">
+                    Open with start message
+                </button>
+                
+                <button class="control-btn secondary" onclick="closeChatbot()">
+                    Close ChatBot
+                </button>
+                
+                <button class="control-btn tertiary" onclick="toggleChatbot()">
+                    Toggle ChatBot
+                </button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <ul>
+                    <li>
+                        <p>
+                            <strong>Open ChatBot</strong> - This will open the chatbot without reinitializing it.
+                            If the chatbot is already open, it will simply display the existing instance.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <strong>Open with start message</strong> - This will open the chatbot with the start message "Echo back {"name":"John", "age": 54} as UIAction format".
+                            Because parameters are provided, this will reinitialize the chatbot instance.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <div class="item">
-        <button
-                style="background-color: #D53D9C; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;"
-                onclick="openChatWithContext({start_user_message: 'Hello'})"
-        >Open with start message
-        </button>
-    </div>
-</div>
+    <ai-studio-chat-bot-global
+            show_assistants_list="yes"
+            ai_studio_business_id="XXXXX"
+            default_assistant_id="XXXXX"
+            web_base_url="https://XXXXX"
+            api_key="XXXXX"
+    >
+    </ai-studio-chat-bot-global>
 
-<div style="margin-top: 20px; margin-bottom: 20px;">
-    <button
-            id="closeButton"
-            onclick="closeChatbot()"
-            style="background-color: #797272; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-right: 10px;">
-        Close ChatBot
-    </button>
-    <button id="toggleButton"
-            onclick="toggleChatbot()"
-            style="background-color: #008ccc; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">
-        Toggle ChatBot
-    </button>
-</div>
+    <script>
+        // Form submission handler
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            
+            alert(`Form submitted!\nName: ${name}\nAge: ${age}`);
+        });
 
-<div style="margin-top: 20px; margin-bottom: 20px;">
-    <ul>
-        <li>
-            <p>
-                <strong>Open ChatBot</strong> - This will open the chatbot without reinitializing it.
-                If the chatbot is already open, it will simply display the existing instance.
-            </p>
-        </li>
-        <li>
-            <p>
-                <strong>Open with start message</strong> - This will open the chatbot with the start message "Hello".
-                Because parameters are provided, this will reinitialize the chatbot instance.
-            </p>
-        </li>
-    </ul>
-</div>
-
-<ai-studio-chat-bot-global
-        show_assistants_list="yes"
-        ai_studio_business_id="XXXXX"
-        default_assistant_id="XXXXX"
-        web_base_url="https://XXXXX"
-        api_key="XXXXX"
->
-</ai-studio-chat-bot-global>
-
-<script>
-    function openChat() {
-        if (window.sd_assistant) {
-            window.sd_assistant.open()
-        } else {
-            console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+        function openChat() {
+            if (window.sd_assistant) {
+                window.sd_assistant.open()
+            } else {
+                console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+            }
         }
-    }
 
-    function openChatWithContext(config) {
-        if (window.sd_assistant) {
-            window.sd_assistant.open(config)
-        } else {
-            console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+        function openChatWithContext() {
+            if (window.sd_assistant) {
+                window.sd_assistant.open({
+                    start_user_message: 'Echo back {"name":"John", "age": 54} as UIAction format'
+                })
+            } else {
+                console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+            }
         }
-    }
 
-    function toggleChatbot() {
-        if (window.sd_assistant) {
-            window.sd_assistant.toggle()
+        function toggleChatbot() {
+            if (window.sd_assistant) {
+                window.sd_assistant.toggle()
+            }
         }
-    }
+        function closeChatbot() {
+            if (window.sd_assistant) {
+                window.sd_assistant.close()
+            }
+        }
 
-    function closeChatbot() {
-        if (window.sd_assistant) {
-            window.sd_assistant.close()
+        window.onUiActionCallback = function (param) {
+            console.log('Received callback from Assistant with the string:', param)
+            const parsedParam = JSON.parse(param)
+            console.log('Parsed param:', parsedParam)
+            document.getElementById('name').value = parsedParam.name
+            document.getElementById('age').value = parsedParam.age
         }
-    }
-</script>
+    </script>
 </body>
 
 </html>
