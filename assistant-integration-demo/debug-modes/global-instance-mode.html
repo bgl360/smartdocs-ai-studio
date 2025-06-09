@@ -3,110 +3,9 @@
 
 <head>
     <meta charset="utf-8"/>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
     <title>AI Assistant - Global Instance Mode</title>
-    <style>
-        body {
-            background: #c2c2c2;
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-        
-        .container {
-            display: flex;
-            gap: 20px;
-            height: calc(100vh - 40px);
-        }
-        
-        .left-panel {
-            flex: 0 0 40%;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .right-panel {
-            flex: 0 0 60%;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        
-        .form-group input:focus {
-            border-color: #D53D9C;
-            outline: none;
-        }
-        
-        .submit-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 10px;
-        }
-        
-        .submit-btn:hover {
-            background-color: #218838;
-        }
-        
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .control-btn {
-            background-color: #D53D9C;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .control-btn.secondary {
-            background-color: #797272;
-        }
-        
-        .control-btn.tertiary {
-            background-color: #008ccc;
-        }
-        
-        .control-btn:hover {
-            opacity: 0.8;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    
 <!--  ADD ASSISTANT JS FILE HERE  -->
 </head>
 
@@ -133,8 +32,8 @@
         <!-- Right Panel - AI Assistant -->
         <div class="right-panel">
             <h2>AI Assistant</h2>
-            <p><strong>Note:</strong> Currently, only <code>start_user_message</code> is supported as a valid prop for the
-                <code>open()</code> method.
+            <p><strong>Note:</strong> Currently, only <strong>start_user_message</strong> is supported as a valid prop for the
+                <strong>open()</strong> method.
             </p>
             
             <div class="button-group">
@@ -142,7 +41,7 @@
                     Open ChatBot
                 </button>
                 
-                <button class="control-btn" onclick="openChatWithContext({start_user_message: 'Hello'})">
+                <button class="control-btn" onclick="openChatWithContext()">
                     Open with start message
                 </button>
                 
@@ -165,7 +64,7 @@
                     </li>
                     <li>
                         <p>
-                            <strong>Open with start message</strong> - This will open the chatbot with the start message "Hello".
+                            <strong>Open with start message</strong> - This will open the chatbot with the start message "Echo back {"name":"John", "age": 54} as UIAction format".
                             Because parameters are provided, this will reinitialize the chatbot instance.
                         </p>
                     </li>
@@ -192,18 +91,6 @@
             const age = document.getElementById('age').value;
             
             alert(`Form submitted!\nName: ${name}\nAge: ${age}`);
-            
-            // You can add additional logic here, such as:
-            // - Sending data to a server
-            // - Opening the chatbot with user information
-            // - Storing data locally
-            
-            // Example: Open chatbot with user info
-            if (window.sd_assistant) {
-                window.sd_assistant.open({
-                    start_user_message: `Hello! My name is ${name} and I am ${age} years old.`
-                });
-            }
         });
 
         function openChat() {
@@ -214,9 +101,11 @@
             }
         }
 
-        function openChatWithContext(config) {
+        function openChatWithContext() {
             if (window.sd_assistant) {
-                window.sd_assistant.open(config)
+                window.sd_assistant.open({
+                    start_user_message: 'Echo back {"name":"John", "age": 54} as UIAction format'
+                })
             } else {
                 console.error('sd_assistant not found. Make sure the web component is properly loaded.')
             }
@@ -227,11 +116,18 @@
                 window.sd_assistant.toggle()
             }
         }
-
         function closeChatbot() {
             if (window.sd_assistant) {
                 window.sd_assistant.close()
             }
+        }
+
+        window.onUiActionCallback = function (param) {
+            console.log('Received callback from Assistant with the string:', param)
+            const parsedParam = JSON.parse(param)
+            console.log('Parsed param:', parsedParam)
+            document.getElementById('name').value = parsedParam.name
+            document.getElementById('age').value = parsedParam.age
         }
     </script>
 </body>
