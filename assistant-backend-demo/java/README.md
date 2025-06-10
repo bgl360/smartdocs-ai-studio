@@ -9,6 +9,15 @@ SmartDocs AI Assistant Base URL should be set in the `application.yaml` file und
 This URL is used to construct the endpoint for the AI Assistant service.
 
 ---
+# 1. Clone the repository
+git clone https://github.com/bgl360/smartdocs-ai-studio/tree/main/assistant-backend-demo/java
+
+# 2. Build the project
+./gradlew build
+
+# 3. Run the application
+./gradlew bootRun
+
 
 ## 🔄 Endpoints
 
@@ -16,7 +25,6 @@ This URL is used to construct the endpoint for the AI Assistant service.
 
 **Route:**
 /ai-assistant/{segment}
-
 
 **Purpose:**
 Proxies REST API requests to the AI Assistant backend.

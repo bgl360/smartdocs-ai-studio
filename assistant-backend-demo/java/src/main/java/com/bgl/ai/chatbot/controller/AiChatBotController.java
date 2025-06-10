@@ -32,7 +32,7 @@ public class AiChatBotController implements AiAssistantHeaderHelper {
             @RequestParam Map<String, String> params,
             ProxyExchange<byte[]> proxy
     ) {
-        String path = integrationConfig.getSmartDocsAiAssistantUrl() + "/ai-assistant/" + segment;
+        String path = integrationConfig.getSmartDocsAiAssistantUrl() + "/ai-assistant" + segment;
         return proxyRequest(path, params, proxy);
     }
 
@@ -90,7 +90,9 @@ public class AiChatBotController implements AiAssistantHeaderHelper {
     private String queryParamsURI(String segment, Map<String, String> params) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(segment);
 
-        params.forEach(builder::queryParam);
+        params.forEach((key, value) ->
+                builder.queryParam(key, value != null ? URLEncoder.encode(value, StandardCharsets.UTF_8) : null)
+        );
 
         return builder.build().toUriString();
     }
