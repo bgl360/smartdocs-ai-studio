@@ -1,14 +1,13 @@
 body {
     background: #c2c2c2;
     margin: 0;
-    padding: 20px;
     font-family: Arial, sans-serif;
 }
 
 .container {
     display: flex;
     gap: 20px;
-    height: calc(100vh - 80px);
+    padding: 5px;
     max-width: 90%;
 }
 
