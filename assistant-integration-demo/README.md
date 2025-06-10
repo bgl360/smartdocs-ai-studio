@@ -62,7 +62,7 @@ https://github.com/user-attachments/assets/4a86e99b-3b75-4414-bcca-0bafc1b5a9a7
 #### onUiActionCallback Demo
 
 
-https://github.com/user-attachments/assets/aea046d3-94c8-4350-80da-9f675bd6c0f3
+https://github.com/user-attachments/assets/288efd44-d556-4616-938a-48300d81ded4
 
 
 ### Project Structure
