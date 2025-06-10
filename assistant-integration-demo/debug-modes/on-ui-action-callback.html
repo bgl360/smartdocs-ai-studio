@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <title>AI Assistant - Global Instance Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    
+<!--  ADD ASSISTANT JS FILE HERE  -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Panel - Form -->
+        <div class="left-panel">
+            <h2>User Information Form</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required placeholder="Enter your age" min="1" max="120">
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+        
+        <!-- Right Panel - AI Assistant -->
+        <div class="right-panel">
+            <div class="assistant-wrapper">
+            <ai-studio-chat-bot-page-mode
+                    ai_studio_business_id="XXXXX"
+                    default_assistant_id="XXXXX"
+                    api_key="XXXXX"
+                    web_base_url="XXXXX"
+                    user_id="XXXXX"
+                    simple_chat_mode="yes"
+                    on_ui_action="onUiActionCallback"
+            ></ai-studio-chat-bot-page-mode>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            
+            alert(`Form submitted!\nName: ${name}\nAge: ${age}`);
+        });
+
+        function openChat() {
+            if (window.sd_assistant) {
+                window.sd_assistant.open()
+            } else {
+                console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+            }
+        }
+
+        function openChatWithContext() {
+            if (window.sd_assistant) {
+                window.sd_assistant.open({
+                    start_user_message: 'Echo back {"name":"John", "age": 54} as UIAction format'
+                })
+            } else {
+                console.error('sd_assistant not found. Make sure the web component is properly loaded.')
+            }
+        }
+
+        function toggleChatbot() {
+            if (window.sd_assistant) {
+                window.sd_assistant.toggle()
+            }
+        }
+        function closeChatbot() {
+            if (window.sd_assistant) {
+                window.sd_assistant.close()
+            }
+        }
+
+        window.onUiActionCallback = function (param) {
+            console.log('Received callback from Assistant with the string:', param)
+            const parsedParam = JSON.parse(param)
+            console.log('Parsed param:', parsedParam)
+            document.getElementById('name').value = parsedParam.name
+            document.getElementById('age').value = parsedParam.age
+        }
+    </script>
+</body>
+
+</html>
